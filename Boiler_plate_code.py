@@ -16,7 +16,6 @@ from scipy import stats
 from pathlib import Path
 
 # %% Configuration
-#WORKING_DIR = "C:\\Users\\wesvo\\Documents\\GDG-demo-repo\\"
 
 try:
     WORKING_DIR = Path(__file__).parent
