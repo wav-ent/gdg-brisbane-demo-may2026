@@ -13,10 +13,16 @@ import anthropic
 from dotenv import load_dotenv
 from IPython.display import display, Markdown
 from scipy import stats
-import numpy as np
+from pathlib import Path
 
 # %% Configuration
-WORKING_DIR = "C:\\Users\\wesvo\\Documents\\GDG-demo-repo\\"
+#WORKING_DIR = "C:\\Users\\wesvo\\Documents\\GDG-demo-repo\\"
+
+try:
+    WORKING_DIR = Path(__file__).parent
+except NameError:  # running interactively
+    WORKING_DIR = Path.cwd()
+
 FILE_NAME   = "GDG_Demo_Pipeline.csv"
 MODEL       = "claude-sonnet-4-5"
 
@@ -83,11 +89,12 @@ def get_llm_score(row, ai_code_col, objective_code_col = 'Human_Written_Code') :
         response = client.messages.create(
             model=MODEL,
             max_tokens=256,
+            temperature=0,
             messages=[{"role": "user", "content": prompt}]
         )
         output_text = response.content[0].text
        # print(f"\n  DEBUG response: {output_text!r}")  # temporary debug line
-        match = re.search(r'(\d+)%', output_text)
+        match = re.search(r'Similarity Score:\s*(\d+)\s*%', output_text)
         return f"{match.group(1)}%" if match else "Format Error"
 
     except Exception as e:
@@ -96,7 +103,7 @@ def get_llm_score(row, ai_code_col, objective_code_col = 'Human_Written_Code') :
 
 
 # =============================================================================
-# PART 2: Define AI Code Generation (Basic and  Advanced Prompt)
+# PART 2: Run AI Code Generation (Basic and  Advanced Prompt)
 # =============================================================================
 
 # %% Define Code Generation Function
@@ -106,7 +113,7 @@ def generate_ai_code(row, prompt_type="advanced"):
 
     prompts = {
         "basic": f"""
-        You are learning Python. Your sometimes works but is not efficient 
+        You are learning Python. Your code sometimes works but is not efficient 
         and sometimes makes mistakes.
         Write a simple Python solution for the following task:
         Task: {task_desc}
@@ -128,6 +135,7 @@ def generate_ai_code(row, prompt_type="advanced"):
         response = client.messages.create(
             model=MODEL,
             max_tokens=512,
+            temperature=0,
             messages=[{"role": "user", "content": prompts[prompt_type]}]
         )
         raw = response.content[0].text.strip()
