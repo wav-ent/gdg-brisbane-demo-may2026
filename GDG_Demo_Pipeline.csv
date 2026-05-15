@@ -1,0 +1,25 @@
+Example,Task Description,Human_Written_Code
+1,We need to build a function in python that we can use to print a statement 5 times,"def print_statement(text: str) -> None:
+    print(f""{text}!\n"" * 5)"
+2,"Adjust an existing function read_and_prep_data so that we first read in dates as a string, and then convert to datetime","def read_and_prep_data(file_path: str) -> pd.DataFrame:
+    df = pd.read_csv(file_path, dtype={""date"": str})
+    df[""date""] = pd.to_datetime(df[""date""])
+    return df"
+3,"Read in an empty file_path """" and then filter out the column ""Price"" for Nulls","file_path = """"
+df = pd.read_csv(file_path)
+df = df.dropna(subset=[""Price""])"
+4,"Read in an empty file_path """" and then filter out the column ""Price"" for Nulls
+Aggregate Column Price and Column Tax into a new column for the dataframe","file_path = """"
+df = pd.read_csv(file_path)
+df = df.dropna(subset=[""Price""])
+df[""Total_Price""] = df[""Price""] + df[""Tax""]"
+5,Combine Price Table with Cost Data based on the keys 'SKU',"
+price_file_path = """"
+price_df = pd.read_csv(price_file_path)
+price_df = price_df.dropna(subset=[""Price""])
+price_df[""Total_Price""] = price_df[""Price""] + price_df[""Tax""]
+
+
+cost_file_path = """"
+cost_df = pd.read_csv(cost_file_path)
+combined_df = pd.merge(price_df, cost_df, on=""SKU"", how=""left"")"

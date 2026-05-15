@@ -1,0 +1,78 @@
+Example,Task Description,Human_Written_Code,AI_Code_Basic,AI_Code_Advanced,Score_Basic,Score_Advanced
+1,We need to build a function in python that we can use to print a statement 5 times,"def print_statement(text: str) -> None:
+    print(f""{text}!\n"" * 5)","def print_statement(statement):
+    for i in range(5):
+        print(statement)","def print_statement_five_times(statement):
+    for _ in range(5):
+        print(statement)",25%,35%
+2,"Adjust an existing function read_and_prep_data so that we first read in dates as a string, and then convert to datetime","def read_and_prep_data(file_path: str) -> pd.DataFrame:
+    df = pd.read_csv(file_path, dtype={""date"": str})
+    df[""date""] = pd.to_datetime(df[""date""])
+    return df","import pandas as pd
+
+def read_and_prep_data(filepath):
+    df = pd.read_csv(filepath, dtype={'date': str})
+    df['date'] = pd.to_datetime(df['date'])
+    return df","import pandas as pd
+
+def read_and_prep_data(filepath):
+    df = pd.read_csv(filepath, dtype={'date': str})
+    df['date'] = pd.to_datetime(df['date'])
+    return df",98%,98%
+3,"Read in an empty file_path """" and then filter out the column ""Price"" for Nulls","file_path = """"
+df = pd.read_csv(file_path)
+df = df.dropna(subset=[""Price""])","import pandas as pd
+
+df = pd.read_csv("""")
+df = df[df[""Price""].notnull()]","import pandas as pd
+
+df = pd.read_csv("""")
+df_filtered = df[df[""Price""].notna()]",92%,92%
+4,"Read in an empty file_path """" and then filter out the column ""Price"" for Nulls
+Aggregate Column Price and Column Tax into a new column for the dataframe","file_path = """"
+df = pd.read_csv(file_path)
+df = df.dropna(subset=[""Price""])
+df[""Total_Price""] = df[""Price""] + df[""Tax""]","import pandas as pd
+
+df = pd.read_csv("""")
+df = df[df[""Price""].notnull()]
+df[""PricePlusTax""] = df[""Price""] + df[""Tax""]","import pandas as pd
+
+df = pd.read_csv("""")
+df = df[df[""Price""].notna()]
+df[""Price_Tax""] = df[""Price""] + df[""Tax""]",92%,85%
+5,Combine Price Table with Cost Data based on the keys 'SKU',"
+price_file_path = """"
+price_df = pd.read_csv(price_file_path)
+price_df = price_df.dropna(subset=[""Price""])
+price_df[""Total_Price""] = price_df[""Price""] + price_df[""Tax""]
+
+
+cost_file_path = """"
+cost_df = pd.read_csv(cost_file_path)
+combined_df = pd.merge(price_df, cost_df, on=""SKU"", how=""left"")","price_table = [
+    {'SKU': 'A001', 'price': 10},
+    {'SKU': 'A002', 'price': 20},
+    {'SKU': 'A003', 'price': 30}
+]
+
+cost_data = [
+    {'SKU': 'A001', 'cost': 5},
+    {'SKU': 'A002', 'cost': 15},
+    {'SKU': 'A004', 'cost': 25}
+]
+
+result = []
+for price_item in price_table:
+    for cost_item in cost_data:
+        if price_item['SKU'] == cost_item['SKU']:
+            combined = {}
+            combined['SKU'] = price_item['SKU']
+            combined['price'] = price_item['price']
+            combined['cost'] = cost_item['cost']
+            result.append(combined)
+
+print(result)","import pandas as pd
+
+def combine_data(price_table, cost_data):
+    return pd.merge(price_table, cost_data, on='SKU', how='outer')",25%,45%
